@@ -1,6 +1,6 @@
 # kafka-loader
 
-`kafka-loader` is a small infrastructure utility for generating controlled producer-side Kafka traffic from JSONL data files.
+`kafka-loader` is a small infrastructure utility for generating controlled producer-side Kafka traffic from JSONL data file.
 
 The application reads a properties file, loads input records from a local `.jsonl` file, and continuously sends them to one or more Kafka topics. Load is controlled by `eps.per.topic` and `threads.per.topic`, which makes the tool useful for smoke testing, connectivity checks, SSL validation, and repeatable producer-side load generation on Linux hosts.
 
