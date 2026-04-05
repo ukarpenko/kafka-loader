@@ -1,10 +1,6 @@
-"""
-Примитивы без зависимостей от Kafka.
-"""
 from __future__ import annotations
 
 import threading
-import time
 from pathlib import Path
 from typing import List
 
@@ -12,7 +8,6 @@ from .config import ConfigError
 
 
 class AtomicCounter:
-    """Потокобезопасный счётчик."""
 
     def __init__(self) -> None:
         self._value = 0
