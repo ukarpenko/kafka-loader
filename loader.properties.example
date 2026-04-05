@@ -1,0 +1,35 @@
+bootstrap.servers=10.10.10.10:9093
+topics=topic-1,topic-2
+
+# Path to the JSONL file used as input data for load generation
+file.path=/opt/kafka-loader/test_data.jsonl
+
+# Load generation settings
+# threads.per.topic - number of worker threads per topic
+# eps.per.topic - events per second per topic
+# run.mode - throttled: sends events at the configured target rate (eps.per.topic); max: send events as fast as possible, ignoring the eps limit
+threads.per.topic=5
+run.mode=throttled
+eps.per.topic=1000
+
+# Supported compression types: none, gzip, snappy, lz4, zstd
+compression.type=none
+
+# SSL connection options
+# SSL passwords are NOT configured here.
+# They must be provided via systemd credentials:
+#   /etc/kafka-loader/credentials/truststore_password
+#   /etc/kafka-loader/credentials/keystore_password
+#   /etc/kafka-loader/credentials/key_password
+# If using PLAINTEXT, set security.protocol=PLAINTEXT
+# and remove or comment out all ssl.* properties
+security.protocol=SSL
+ssl.truststore.location=/etc/kafka-loader/kafka.server.truststore.jks
+ssl.keystore.location=/etc/kafka-loader/kafka.server.keystore.jks
+
+
+# Producer default settings
+acks=1
+linger.ms=5
+batch.size=1000000
+buffer.memory=67108864

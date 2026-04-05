@@ -8,6 +8,7 @@ from typing import Dict, List, Optional
 SECURITY_PROTOCOL_PLAINTEXT = "PLAINTEXT"
 SECURITY_PROTOCOL_SSL = "SSL"
 
+ALLOWED_RUN_MODES = {"throttled", "max"}
 ALLOWED_COMPRESSION_TYPES = {"none", "gzip", "snappy", "lz4", "zstd"}
 ALLOWED_SECURITY_PROTOCOLS = {SECURITY_PROTOCOL_PLAINTEXT, SECURITY_PROTOCOL_SSL}
 
@@ -42,6 +43,7 @@ class AppConfig:
     bootstrap_servers: str
     topics: List[str]
     file_path: str
+    run_mode: str
     threads_per_topic: int
     eps_per_topic: int
     compression_type: str
@@ -76,6 +78,7 @@ class AppConfig:
             topics=topics,
             file_path=required(props, "file.path"),
             threads_per_topic=parse_int(required(props, "threads.per.topic"), "threads.per.topic"),
+            run_mode=props.get("run.mode", "throttled").strip().lower(),
             eps_per_topic=parse_int(required(props, "eps.per.topic"), "eps.per.topic"),
             compression_type=props.get("compression.type", "none").strip().lower(),
             security_protocol=props.get("security.protocol", SECURITY_PROTOCOL_PLAINTEXT).strip().upper(),
@@ -92,6 +95,10 @@ class AppConfig:
     def validate(self) -> None:
         if not self.topics:
             raise ConfigError("Property topics must contain at least one topic")
+        if self.run_mode not in ALLOWED_RUN_MODES:
+            raise ConfigError(
+                f"run.mode must be one of {sorted(ALLOWED_RUN_MODES)}, got: {self.run_mode}"
+            )
         if self.threads_per_topic <= 0:
             raise ConfigError("threads.per.topic must be > 0")
         if self.eps_per_topic <= 0:
